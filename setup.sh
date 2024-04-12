@@ -5,7 +5,7 @@ xbps-install -Su mold -y
 export LDFLAGS=-fuse-ld=mold
 
 # Add dependencies
-xbps-install -Su git patch cmake ninja clang pkgconf nodejs libnuma-devel boost-devel openssl-devel libcurl-devel libevdev-devel libX11-devel wayland-devel libva-devel libdrm-devel libcap-devel opus-devel pulseaudio-devel miniupnpc-devel libnotify-devel libayatana-appindicator-devel -y
+xbps-install -Su git patch cmake ninja clang pkgconf nodejs libnuma-devel boost-devel openssl-devel libcurl-devel libevdev-devel libX11-devel wayland-devel libva-devel libdrm-devel libcap-devel opus-devel pulseaudio-devel miniupnpc-devel libnotify-devel libayatana-appindicator-devel libvdpau-devel -y
 
 # Work in /opt/src
 mkdir -p /opt/src
