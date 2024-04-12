@@ -14,7 +14,7 @@ cd /opt/src
 # TODO Sunshine build-deps, src build
 
 # Sunshine, src build
-git clone -b patch-7 --depth 1 --recurse-submodules https://github.com/istori1/Sunshine.git
+git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
 
  # Remove deps
 #rm -r /opt/src/Sunshine/third-party/build-deps
