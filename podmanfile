@@ -1,4 +1,4 @@
-FROM ghcr.io/void-linux/void-musl-busybox:latest
+FROM docker.io/library/alpine:latest
 COPY setup.sh /opt/setup.sh
 RUN chmod u+x /opt/setup.sh
 RUN /opt/setup.sh
