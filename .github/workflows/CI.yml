@@ -19,7 +19,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-musl-clang:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -31,8 +31,60 @@ jobs:
       - name: Setup Podman
         run: |
           sudo apt update
-          sudo apt-get -y install podman
+          sudo apt install podman -y
 
-      - name: Create container and run tests
+      - name: Create musl-clang container
         run: |
-          podman build --tag void-sunshine -f ./podmanfile
+          podman build --tag musl-sunshine -f ./podmanfile
+  build-musl-clang:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get source
+        uses: actions/checkout@v3
+
+      - name: Setup Podman
+        run: |
+          sudo apt update
+          sudo apt install podman -y
+
+      - name: Create musl-clang container
+        run: |
+          podman build --tag musl-sunshine -f ./podmanfile
+build-musl-clang:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get source
+        uses: actions/checkout@v3
+
+      - name: Setup Podman
+        run: |
+          sudo apt update
+          sudo apt install podman -y
+
+      - name: Create musl-clang container
+        run: |
+          podman build --tag musl-clang-sunshine -f ./podmanfile
+  build-musl-gcc:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get source
+        uses: actions/checkout@v3
+
+      - name: Setup Podman
+        run: |
+          sudo apt update
+          sudo apt install podman -y
+
+      - name: Create musl-gcc container
+        run: |
+          podman build --tag musl-gcc-sunshine -f ./gcc.podmanfile
+
