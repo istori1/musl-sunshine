@@ -1,0 +1,4 @@
+FROM docker.io/library/alpine:latest
+COPY gcc_setup.sh /opt/gcc_setup.sh
+RUN chmod u+x /opt/gcc_setup.sh
+RUN /opt/gcc_setup.sh
