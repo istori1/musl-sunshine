@@ -109,7 +109,7 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --disable-debug \
 --disable-decoders \
 --disable-doc \
---disable-filters
+--disable-filters \
 --disable-iconv \
 --disable-programs \
 --enable-avcodec \
