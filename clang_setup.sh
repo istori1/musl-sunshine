@@ -105,12 +105,6 @@ cmake --install .
 # ffmpeg
 cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 ./configure \
---disable-autodetect \
---disable-debug \
---disable-decoders \
---disable-doc \
---disable-filters \
---disable-iconv \
 --disable-programs \
 --enable-avcodec \
 --enable-encoder=h264_v4l2m2m \
