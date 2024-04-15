@@ -51,6 +51,12 @@ wayland-dev \
 # Sunshine build-deps, src build
 git clone -b master --depth 1 --recurse-submodules https://github.com/LizardByte/build-deps.git
 
+# Sunshine nightly, src build
+git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
+
+#####################
+# Remove deps
+rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 #####################
 # patches
 # cd /run/build/build-deps/ffmpeg_patches
@@ -58,7 +64,7 @@ git clone -b master --depth 1 --recurse-submodules https://github.com/LizardByte
 # x264
 cd /run/build/build-deps/ffmpeg_sources/x264
 ./configure \
---disable-asm
+--disable-asm \
 --disable-cli \
 --enable-static \
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
@@ -71,7 +77,7 @@ cd source
 mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64  \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
 -DENABLE_ASSEMBLY=0 \
 -DENABLE_CLI=OFF \
 -DENABLE_HDR10_PLUS=1 \
@@ -103,7 +109,7 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --disable-debug \
 --disable-decoders \
 --disable-doc \
---disable-filters
+--disable-filters \
 --disable-iconv \
 --disable-programs \
 --enable-avcodec \
@@ -123,23 +129,13 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --extra-ldflags="-fuse-ld=mold -L/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib" \
 --extra-libs="-lpthread -lm" \
 --pkg-config-flags="--static" \
---pkg-config=pkg-config
+--pkg-config=pkg-config \
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
 make -j$(nproc)
 make install
 #####################
-
-# Work in /run/build
-cd /run/build
-
-# Sunshine nightly, src build
-git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
-
-#####################
-# Remove deps
-rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
-#####################
 #sunshine
+cd /run/build/Sunshine
 mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
