@@ -51,6 +51,12 @@ wayland-dev \
 # Sunshine build-deps, src build
 git clone -b master --depth 1 --recurse-submodules https://github.com/LizardByte/build-deps.git
 
+# Sunshine nightly, src build
+git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
+
+#####################
+# Remove deps
+rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 #####################
 # patches
 # cd /run/build/build-deps/ffmpeg_patches
@@ -128,18 +134,8 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 make -j$(nproc)
 make install
 #####################
-
-# Work in /run/build
-cd /run/build
-
-# Sunshine nightly, src build
-git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
-
-#####################
-# Remove deps
-rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
-#####################
 #sunshine
+cd /run/build/Sunshine
 mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
