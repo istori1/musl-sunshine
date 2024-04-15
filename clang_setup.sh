@@ -1,34 +1,155 @@
 #! /bin/sh
 
+# Work in /run/build
+mkdir -p /run/build
+cd /run/build
+
+# Add build tools (samurai is ninja-build)
+apk add bash \
+build-base \
+clang17 \
+cmake \
+git \
+make \
+mold \
+nasm \
+npm \
+pkgconf \
+samurai \
+vala \
+--no-interactive
+
 # Use mold linker
-apk add mold --no-interactive
 export LDFLAGS=-fuse-ld=mold
 
 # Use Clang/LLVM compiler
-apk add clang17 --no-interactive
 export CC=clang && export CXX=clang++
 
-# Add build tools
-apk add git cmake pkgconf npm vala ninja-build ninja-is-really-ninja
-
 # Add dependencies
-apk add numactl-dev boost-dev openssl-dev curl-dev libevdev-dev libx11-dev wayland-dev libva-dev libdrm-dev libcap-dev libnotify-dev gtk+3.0-dev gobject-introspection-dev opus-dev pulseaudio-dev libdbusmenu-gtk3-dev miniupnpc-dev libayatana-appindicator-dev libvdpau-dev intel-media-sdk-dev --no-interactive
+apk add boost-dev \
+curl-dev \
+gobject-introspection-dev \
+gtk+3.0-dev \
+intel-media-sdk-dev \
+libayatana-appindicator-dev \
+libcap-dev \
+libdbusmenu-gtk3-dev \
+libdrm-dev \
+libevdev-dev \
+libnotify-dev \
+libva-dev \
+libvdpau-dev \
+libx11-dev \
+miniupnpc-dev \
+numactl-dev \
+openssl-dev \
+opus-dev \
+pulseaudio-dev \
+wayland-dev \
+--no-interactive
 
-# Work in /opt/src
-mkdir -p /opt/src
-cd /opt/src
+# Sunshine build-deps, src build
+git clone -b master --depth 1 --recurse-submodules https://github.com/LizardByte/build-deps.git
 
-# TODO Sunshine build-deps, src build
+#####################
+# patches
+# cd /run/build/build-deps/ffmpeg_patches
+#####################
+# x264
+cd /run/build/build-deps/ffmpeg_sources/x264
+./configure \
+--disable-asm
+--disable-cli \
+--enable-static \
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+make -j$(nproc)
+make install
+#####################
+# x265
+cd /run/build/build-deps/ffmpeg_sources/x265_git
+cd source
+mkdir build && cd build
+cmake -G Ninja \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64  \
+-DENABLE_ASSEMBLY=0 \
+-DENABLE_CLI=OFF \
+-DENABLE_HDR10_PLUS=1 \
+-DENABLE_SHARED=OFF \
+-DSTATIC_LINK_CRT=ON \
+.. 
+ninja
+cmake --install .
+#####################
+# svt-av1
+cd /run/build/build-deps/ffmpeg_sources/SVT-AV1
+mkdir build && cd build
+cmake -G Ninja \
+-DBUILD_APPS=OFF \
+-DBUILD_DEC=OFF \
+-DBUILD_SHARED_LIBS=OFF \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+-DCOMPILE_C_ONLY=ON \
+-DENABLE_AVX512=ON \
+.. 
+ninja
+cmake --install .
+#####################
+# ffmpeg
+cd /run/build/build-deps/ffmpeg_sources/ffmpeg
+./configure \
+--disable-autodetect \
+--disable-debug \
+--disable-decoders \
+--disable-doc \
+--disable-filters
+--disable-iconv \
+--disable-programs \
+--enable-avcodec \
+--enable-encoder=h264_v4l2m2m \
+--enable-encoder=h264_vaapi,hevc_vaapi,av1_vaapi \
+--enable-encoder=libsvtav1 \
+--enable-encoder=libx264,libx265 \
+--enable-gpl \
+--enable-libsvtav1 \
+--enable-libx264 \
+--enable-libx265 \
+--enable-static \
+--enable-swscale \
+--enable-v4l2_m2m \
+--enable-vaapi \
+--extra-cflags="-I/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include" \
+--extra-ldflags="-fuse-ld=mold -L/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib" \
+--extra-libs="-lpthread -lm" \
+--pkg-config-flags="--static" \
+--pkg-config=pkg-config
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+make -j$(nproc)
+make install
+#####################
 
-# Sunshine, src build
+# Work in /run/build
+cd /run/build
+
+# Sunshine nightly, src build
 git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByte/Sunshine.git
 
- # Remove deps
-#rm -r /opt/src/Sunshine/third-party/build-deps
-
- # Apply patch
-cd Sunshine
-# wget https://raw.githubusercontent.com/flathub/dev.lizardbyte.app.Sunshine/0232e605e725b2da4d151ebf88bc6171a3d0ae28/patches/remove-mfx.patch
-# patch -p1 -i remove-mfx.patch
-
-mkdir build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DSUNSHINE_ASSETS_DIR=share/sunshine -DSUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine -DTESTS_ENABLE_PYTHON_TESTS=OFF -DSYSTEMD_USER_UNIT_INSTALL_DIR=share/sunshine -DUDEV_RULES_INSTALL_DIR=share/sunshine .. && ninja && cmake --install .
+#####################
+# Remove deps
+rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
+#####################
+#sunshine
+mkdir build && cd build
+cmake -G Ninja \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=/usr \
+-DSUNSHINE_ASSETS_DIR=share/sunshine \
+-DSUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine \
+-DSYSTEMD_USER_UNIT_INSTALL_DIR=share/sunshine \
+-DTESTS_ENABLE_PYTHON_TESTS=OFF \
+-DUDEV_RULES_INSTALL_DIR=share/sunshine \
+..
+ninja
+cmake --install .
+#####################
