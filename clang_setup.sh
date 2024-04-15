@@ -64,7 +64,7 @@ rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 # x264
 cd /run/build/build-deps/ffmpeg_sources/x264
 ./configure \
---disable-asm
+--disable-asm \
 --disable-cli \
 --enable-static \
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
@@ -77,7 +77,7 @@ cd source
 mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64  \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
 -DENABLE_ASSEMBLY=0 \
 -DENABLE_CLI=OFF \
 -DENABLE_HDR10_PLUS=1 \
@@ -129,7 +129,7 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --extra-ldflags="-fuse-ld=mold -L/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib" \
 --extra-libs="-lpthread -lm" \
 --pkg-config-flags="--static" \
---pkg-config=pkg-config
+--pkg-config=pkg-config \
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
 make -j$(nproc)
 make install
