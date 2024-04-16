@@ -67,7 +67,7 @@ cd /run/build/build-deps/ffmpeg_sources/x264
 --disable-asm \
 --disable-cli \
 --enable-static \
---prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 make -j$(nproc)
 make install
 #####################
@@ -124,7 +124,7 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --extra-libs="-lpthread -lm" \
 --pkg-config-flags="--static" \
 --pkg-config=pkg-config \
---prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 make -j$(nproc)
 make install
 #####################
