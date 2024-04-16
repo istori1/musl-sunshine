@@ -28,7 +28,7 @@ jobs:
       - name: Get source
         uses: actions/checkout@v4
 
-      - name: Setup docker
+      - name: Setup Docker
         run: |
           sudo apt update
           sudo apt install docker -y
@@ -36,6 +36,12 @@ jobs:
       - name: Create musl-clang container
         run: |
           docker buildx build --tag musl-clang-sunshine -f ./clang.dockerfile --output=build --target=build-output .
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: musl-clang-sunshine
+          path: build
 
   build-musl-gcc:
     # The type of runner that the job will run on
@@ -46,7 +52,7 @@ jobs:
       - name: Get source
         uses: actions/checkout@v4
 
-      - name: Setup docker
+      - name: Setup Docker
         run: |
           sudo apt update
           sudo apt install docker -y
@@ -55,3 +61,8 @@ jobs:
         run: |
           docker buildx build --tag musl-gcc-sunshine -f ./gcc.dockerfile --output=build --target=build-output .
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: musl-gcc-sunshine
+          path: build
