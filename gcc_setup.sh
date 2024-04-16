@@ -149,7 +149,7 @@ cd /run/build/Sunshine
 mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=/usr \
+-DCMAKE_INSTALL_PREFIX=/app \
 -DSUNSHINE_ASSETS_DIR=share/sunshine \
 -DSUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine \
 -DSYSTEMD_USER_UNIT_INSTALL_DIR=share/sunshine \
