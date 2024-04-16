@@ -102,6 +102,10 @@ cmake -G Ninja \
 ninja
 cmake --install .
 #####################
+# Copy
+cp -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/* /usr/include
+cp -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib/* /usr/lib
+#####################
 # ffmpeg
 cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 ./configure \
