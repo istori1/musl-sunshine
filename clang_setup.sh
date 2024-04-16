@@ -9,6 +9,7 @@ apk add bash \
 build-base \
 clang17 \
 cmake \
+compiler-rt \
 git \
 make \
 mold \
@@ -24,6 +25,9 @@ export LDFLAGS=-fuse-ld=mold
 
 # Use Clang/LLVM compiler
 export CC=clang && export CXX=clang++
+
+# Add to search path
+export PKG_CONFIG_PATH=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Add dependencies
 apk add boost-dev \
@@ -56,6 +60,8 @@ git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByt
 
 #####################
 # Remove deps
+mv /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/AMF /usr/include
+mv /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/ffnvcodec /usr/include
 rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 #####################
 # patches
@@ -102,10 +108,6 @@ cmake -G Ninja \
 ninja
 cmake --install .
 #####################
-# Copy
-cp -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/* /usr/include
-cp -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib/* /usr/lib
-#####################
 # ffmpeg
 cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 ./configure \
@@ -131,6 +133,16 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 make -j$(nproc)
 make install
+#####################
+# cbs
+cd /run/build/build-deps
+mkdir build && cd build
+cmake -G Ninja \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+-DDFFMPEG_CBS=ON \
+..
+ninja
+cmake --install .
 #####################
 #sunshine
 cd /run/build/Sunshine

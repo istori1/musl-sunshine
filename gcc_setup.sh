@@ -9,6 +9,7 @@ apk add bash \
 build-base \
 clang17 \
 cmake \
+compiler-rt \
 git \
 make \
 mold \
@@ -24,6 +25,9 @@ export LDFLAGS=-fuse-ld=mold
 
 # Use GNU compiler
 export CC=gcc && export CXX=g++
+
+# Add to search path
+export PKG_CONFIG_PATH=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Add dependencies
 apk add boost-dev \
@@ -56,6 +60,8 @@ git clone -b nightly --depth 1 --recurse-submodules https://github.com/LizardByt
 
 #####################
 # Remove deps
+mv /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/AMF /usr/include
+mv /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/include/ffnvcodec /usr/include
 rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 #####################
 # patches
@@ -67,7 +73,7 @@ cd /run/build/build-deps/ffmpeg_sources/x264
 --disable-asm \
 --disable-cli \
 --enable-static \
---prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 make -j$(nproc)
 make install
 #####################
@@ -105,13 +111,7 @@ cmake --install .
 # ffmpeg
 cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 ./configure \
---disable-autodetect \
---disable-debug \
---disable-decoders \
---disable-doc \
---disable-filters \
---disable-iconv \
---disable-programs \
+--disable-all \
 --enable-avcodec \
 --enable-encoder=h264_v4l2m2m \
 --enable-encoder=h264_vaapi,hevc_vaapi,av1_vaapi \
@@ -130,9 +130,19 @@ cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 --extra-libs="-lpthread -lm" \
 --pkg-config-flags="--static" \
 --pkg-config=pkg-config \
---prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+--prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 make -j$(nproc)
 make install
+#####################
+# cbs
+cd /run/build/build-deps
+mkdir build && cd build
+cmake -G Ninja \
+-DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
+-DDFFMPEG_CBS=ON \
+..
+ninja
+cmake --install .
 #####################
 #sunshine
 cd /run/build/Sunshine

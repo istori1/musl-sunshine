@@ -26,7 +26,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Get source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Podman
         run: |
@@ -35,7 +35,7 @@ jobs:
 
       - name: Create musl-clang container
         run: |
-          podman build --tag musl-clang-sunshine -f ./clang.podmanfile
+          podman build --output=build --target=build-output -f ./clang.podmanfile
 
   build-musl-gcc:
     # The type of runner that the job will run on
@@ -44,7 +44,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Get source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Podman
         run: |
@@ -53,5 +53,5 @@ jobs:
 
       - name: Create musl-gcc container
         run: |
-          podman build --tag musl-gcc-sunshine -f ./gcc.podmanfile
+          podman build --output=build --target=build-output -f ./gcc.podmanfile
 
