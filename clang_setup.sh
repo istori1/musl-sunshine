@@ -109,7 +109,7 @@ cp -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64/lib/* /usr/
 # ffmpeg
 cd /run/build/build-deps/ffmpeg_sources/ffmpeg
 ./configure \
---disable-programs \
+--disable-all \
 --enable-avcodec \
 --enable-encoder=h264_v4l2m2m \
 --enable-encoder=h264_vaapi,hevc_vaapi,av1_vaapi \
