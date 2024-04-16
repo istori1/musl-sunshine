@@ -35,7 +35,7 @@ jobs:
 
       - name: Create musl-clang container
         run: |
-          podman build --output=build --target=build-output -f ./clang.podmanfile
+          podman build --tag musl-clang-sunshine -f ./clang.podmanfile --output=out --target=build-output
 
   build-musl-gcc:
     # The type of runner that the job will run on
@@ -53,5 +53,5 @@ jobs:
 
       - name: Create musl-gcc container
         run: |
-          podman build --output=build --target=build-output -f ./gcc.podmanfile
+          podman build --tag musl-gcc-sunshine -f ./gcc.podmanfile --output=out --target=build-output
 
