@@ -28,14 +28,20 @@ jobs:
       - name: Get source
         uses: actions/checkout@v4
 
-      - name: Setup Podman
+      - name: Setup Docker
         run: |
           sudo apt update
-          sudo apt install podman -y
+          sudo apt install docker -y
 
       - name: Create musl-clang container
         run: |
-          podman build --tag musl-clang-sunshine -f ./clang.podmanfile
+          docker buildx build --tag musl-clang-sunshine -f ./clang.dockerfile --output=build --target=build-output .
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: musl-clang-sunshine
+          path: build
 
   build-musl-gcc:
     # The type of runner that the job will run on
@@ -46,12 +52,17 @@ jobs:
       - name: Get source
         uses: actions/checkout@v4
 
-      - name: Setup Podman
+      - name: Setup Docker
         run: |
           sudo apt update
-          sudo apt install podman -y
+          sudo apt install docker -y
 
       - name: Create musl-gcc container
         run: |
-          podman build --tag musl-gcc-sunshine -f ./gcc.podmanfile
+          docker buildx build --tag musl-gcc-sunshine -f ./gcc.dockerfile --output=build --target=build-output .
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: musl-gcc-sunshine
+          path: build
