@@ -70,7 +70,6 @@ rm -r /run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
 # x264
 cd /run/build/build-deps/ffmpeg_sources/x264
 ./configure \
---disable-asm \
 --disable-cli \
 --enable-static \
 --prefix=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64
@@ -84,7 +83,7 @@ mkdir build && cd build
 cmake -G Ninja \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
--DENABLE_ASSEMBLY=0 \
+-DENABLE_ASSEMBLY=1 \
 -DENABLE_CLI=OFF \
 -DENABLE_HDR10_PLUS=1 \
 -DENABLE_SHARED=OFF \
@@ -102,7 +101,7 @@ cmake -G Ninja \
 -DBUILD_SHARED_LIBS=OFF \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=/run/build/Sunshine/third-party/build-deps/ffmpeg/linux-x86_64 \
--DCOMPILE_C_ONLY=ON \
+-DCOMPILE_C_ONLY=OFF \
 -DENABLE_AVX512=ON \
 .. 
 ninja
