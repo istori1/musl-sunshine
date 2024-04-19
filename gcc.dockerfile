@@ -4,4 +4,4 @@ RUN chmod u+x /opt/gcc_setup.sh
 RUN /opt/gcc_setup.sh
 
 FROM scratch AS build-output
-COPY --from=alpine-builder /app /app
+COPY --from=alpine-builder /opt/sunshine /opt/sunshine
